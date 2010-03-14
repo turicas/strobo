@@ -1,0 +1,8 @@
+SlideShow TODO:
+ Create tests to check:
+  - video size
+  - duration of creation
+  - quality
+  * using {320x240, 640x480} at {15, 30}fps
+  * without and with blank audio
+  * without and with not blank audio

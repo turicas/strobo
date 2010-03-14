@@ -1,0 +1,26 @@
+strobo requires:
+ - ffmpeg2theora
+    On Debian, Ubuntu and other Debian-based distros:
+    # aptitude install ffmpeg2theora
+    On ArchLinux:
+    # pacman -S ffmpeg2theora
+
+ - oggz-tools
+    Get it on: http://www.xiph.org/downloads/
+    $ tar xfz liboggz-X.Y.Z.tar.gz
+    $ cd liboggz-X.Y.Z.tar.gz
+    $ ./configure
+    $ make
+    # make install
+    OR:
+    On ArchLinux:
+    # yaourt -S aur/liboggz --> (Out of date!)
+
+ - PIL (Python Imaging Library)
+    # easy_install pil
+    OR:
+    Get it on: http://www.pythonware.com/products/pil/
+    So, execute:
+    $ tar xfz Imaging-X.Y.Z.tar.gz
+    $ cd Imaging-X.Y.Z.tar.gz
+    # python setup.py install
