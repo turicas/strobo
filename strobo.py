@@ -18,8 +18,8 @@ DEFAULT_AUDIO_QUALITY = 5
 class ImageText(Image.Image):
     '''Get a text and create an image with that text.
     '''
-    
-    
+
+
     def __init__(self, mode='RGBA', size=(320, 240),
                  background_color=(255, 255, 255)):
         Image.Image.__init__(self)
@@ -35,8 +35,8 @@ class ImageText(Image.Image):
         self.size = im.size
         if im.mode == 'P':
             self.palette = ImagePalette.ImagePalette()
-   
-    
+
+
     def write_text(self, (x, y), text, fontfile='DejaVuSansMono.ttf', size=20):
         w_max, h_max = self.size
         draw = ImageDraw.Draw(self)
@@ -89,8 +89,8 @@ class Timeline(object):
         self.w = width
         self.h = height
         self.frames = []
-    
-    
+
+
     def add_image(self, image, duration, fade_in=0, fade_out=0, blank_in=None,
                   blank_out=None):
         self.frames.append({'filename': image, 'duration': duration,
@@ -99,15 +99,15 @@ class Timeline(object):
             self.frames[-1]['blank_in'] = blank_in
         if blank_out != None:
             self.frames[-1]['blank_out'] = blank_out
-    
-    
+
+
     def create_images(self, path):
         self.path = path
         blank = Image.new('RGBA', (self.w, self.h), color='#FFFFFF')
         blank.save('/tmp/blank.png')
         del(blank)
         blank_in = blank_out = Image.open('/tmp/blank.png')
-        
+
         count = 1
         self.total_duration = 0
         for img in self.frames:
@@ -131,7 +131,7 @@ class Timeline(object):
                     #img_tmp.save(img['blank_out'])
                     #del(img_tmp)
                     #img['blank_out'] = Image.open(img['blank_out'])
-            
+
             image = Image.open(img['filename'])
             image = image.convert('RGBA')
             if img['fade_in'] > 0:
@@ -142,12 +142,12 @@ class Timeline(object):
                     img_tmp.save('%s/%09d.jpg' % (path, count),
                                  quality=DEFAULT_IMAGE_QUALITY)
                     count += 1
-            
+
             duration_total_frames = int(ceil(img['duration'] * self.fps))
             for f in range(1, duration_total_frames + 1):
                 copyfile(img['filename'], '%s/%09d.jpg' % (path, count))
                 count += 1
-            
+
             if img['fade_out'] > 0:
                 fade_out_total_frames = int(ceil(img['fade_out'] * self.fps))
                 for f in range(1, fade_out_total_frames + 1):
@@ -156,12 +156,12 @@ class Timeline(object):
                     img_tmp.save('%s/%09d.jpg' % (path, count),
                                  quality=DEFAULT_IMAGE_QUALITY)
                     count += 1
-            
+
             self.total_duration += img['fade_in'] + img['duration'] + \
                                    img['fade_out']
             self.total_frames = count - 1
-    
-    
+
+
     def render(self, filename_full, audio=None, with_blank_audio=False,
                delete_temp_files=False):
         if with_blank_audio:
@@ -173,10 +173,10 @@ class Timeline(object):
             wav.writeframes(chr(128) * total_frames)
             wav.close()
             audio = '/tmp/blank.wav'
-        
+
         filenames = '%s/%%09d.jpg' % self.path
         filename = filename_full.split('/')[-1]
-        
+
         if audio:
             commands = '' \
             '/usr/bin/ffmpeg2theora -v %(video_quality)d --inputfps %(fps)d %(path)s/%%09d.jpg -o /tmp/%(filename)s-video.ogg;' \
@@ -190,7 +190,7 @@ class Timeline(object):
                 '/usr/bin/ffmpeg2theora -v %(video_quality)d %(path)s/%%09d.jpg -o %(filename_full)s.ogv' % \
                 dict(video_quality=DEFAULT_VIDEO_QUALITY, path=self.path,
                      filename_full=filename_full)
-        
+
         for cmd in commands.split(';'):
             #TODO: should use logging
             #print 'Executing: '
@@ -206,7 +206,7 @@ class Timeline(object):
         #       --copyright           Copyright.
         #       --license             License.
         #       --contact             Contact link.
-        
+
         if delete_temp_files:
             rmtree(self.dirname_frames)
             rmtree(self.dirname)
@@ -225,12 +225,12 @@ class SlideShow(Timeline):
         self.audio = None
         self.fade_in = fade_in
         self.fade_out = fade_out
-    
-    
+
+
     def add_audio(self, audio):
         self.audio = audio
-    
-    
+
+
     def add_images(self, *args):
         list_of_files = []
         for i in args:
@@ -259,11 +259,11 @@ class SlideShow(Timeline):
                                blank_in=previous, fade_out=self.fade_out,
                                blank_out='/tmp/black.png')
             previous = image
-    
-    
+
+
     def create_images(self):
         Timeline.create_images(self, self.dirname_frames)
-    
+
 
     def render(self, filename):
         if self.audio:
