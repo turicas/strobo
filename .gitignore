@@ -1,6 +1,6 @@
-syntax: glob
-*~
+.*.sw?
 *.pyc
+*~
 tests/*
 *.ttf
 *.jpg
