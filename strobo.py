@@ -1,13 +1,17 @@
+# coding: utf-8
+
+import os
+import glob
+import uuid
+
+from shutil import copyfile, rmtree
+from math import ceil
+
 import Image
 import ImageDraw
 import ImageFont
 import ImagePalette
 import ImageColor
-from shutil import copyfile, rmtree
-from math import ceil
-import os
-import glob
-import uuid
 
 
 DEFAULT_IMAGE_QUALITY = 90
