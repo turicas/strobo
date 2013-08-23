@@ -239,7 +239,6 @@ class SlideShow(Timeline):
         list_of_files = []
         for i in args:
             list_of_files.extend(glob.glob(i))
-        list_of_files.sort()
         unique = str(uuid.uuid4())
         self.dirname = dirname = '/tmp/%s-resized' % unique
         self.dirname_frames = '/tmp/%s-frames' % unique
