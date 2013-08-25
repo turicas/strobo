@@ -52,7 +52,7 @@ def create_timeline_and_render_video():
         except OSError:
             pass
     t.create_images('img/')
-    t.render('intro', with_blank_audio=True)
+    t.render('intro.ogv', with_blank_audio=True)
 
 
 def run_and_print_time(list_of_functions):
@@ -65,4 +65,4 @@ def run_and_print_time(list_of_functions):
 
 
 run_and_print_time((create_title_image, create_blank_image, create_forum_image,
-                    create_timeline_and_render_video))        
+                    create_timeline_and_render_video))

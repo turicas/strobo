@@ -75,6 +75,7 @@ def normalize_images(list_of_images, destination, size=(640, 480)):
         img = Image.open(image)
         if img.size != size or img.format != 'JPEG':
             img = img.resize(size, Image.ANTIALIAS)
+            # TODO: resize image proportionally
             filename = '%s/%s.jpg' % (destination, os.path.basename(image))
             img.save(filename, quality=DEFAULT_IMAGE_QUALITY)
             new_list.append(filename)
@@ -182,23 +183,26 @@ class Timeline(object):
         filename = filename_full.split('/')[-1]
 
         if audio:
-            commands = '' \
-            '/usr/bin/ffmpeg2theora -v %(video_quality)d --inputfps %(fps)d %(path)s/%%09d.jpg -o /tmp/%(filename)s-video.ogg;' \
-            '/usr/bin/ffmpeg2theora -a %(audio_quality)d %(audio)s -o /tmp/%(filename)s-audio.ogg;' \
-            '/usr/local/bin/oggz-merge -o %(filename_full)s.ogv /tmp/%(filename)s-video.ogg /tmp/%(filename)s-audio.ogg;' % \
-                dict(video_quality=DEFAULT_VIDEO_QUALITY, path=self.path,
-                     filename=filename, audio_quality=DEFAULT_AUDIO_QUALITY,
-                     audio=audio, filename_full=filename_full, fps=self.fps)
+            commands = [
+                    ('/usr/bin/ffmpeg2theora -v %(video_quality)d '
+                     '--inputfps %(fps)d %(path)s/%%09d.jpg '
+                     '-o /tmp/%(filename)s-video.ogg'),
+                    ('/usr/bin/ffmpeg2theora -a %(audio_quality)d %(audio)s '
+                     '-o /tmp/%(filename)s-audio.ogg'),
+                    ('/usr/local/bin/oggz-merge -o %(filename_full)s '
+                     '/tmp/%(filename)s-video.ogg '
+                     '/tmp/%(filename)s-audio.ogg')]
         else:
-            commands = \
-                '/usr/bin/ffmpeg2theora -v %(video_quality)d %(path)s/%%09d.jpg -o %(filename_full)s.ogv' % \
-                dict(video_quality=DEFAULT_VIDEO_QUALITY, path=self.path,
-                     filename_full=filename_full)
+            commands = [
+                    ('/usr/bin/ffmpeg2theora -v %(video_quality)d '
+                     '%(path)s/%%09d.jpg -o %(filename_full)s'),]
+        data = dict(video_quality=DEFAULT_VIDEO_QUALITY, path=self.path,
+                    filename=filename, audio_quality=DEFAULT_AUDIO_QUALITY,
+                    audio=audio, filename_full=filename_full, fps=self.fps)
 
-        for cmd in commands.split(';'):
+        for cmd in commands:
+            cmd = cmd % data
             #TODO: should use logging
-            #print 'Executing: '
-            #print cmd
             os.system(cmd)
 
         #TODO: ffmpeg2theora options:

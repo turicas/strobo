@@ -13,5 +13,5 @@ print ' Duration: %f seconds' % (time.time() - start)
 print 'Rendering video...'
 start = time.time()
 slides.add_audio('tests/slide_show/macarronada.mp3')
-slides.render('dojo-rio')
+slides.render('dojo-rio.ogv')
 print ' Duration: %f seconds' % (time.time() - start)
