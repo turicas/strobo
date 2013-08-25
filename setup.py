@@ -4,7 +4,7 @@ from distutils.core import setup
 
 
 setup(name='strobo',
-      version='0.1.1',
+      version='0.1.2',
       author=u'Álvaro Justen',
       author_email='alvarojusten@gmail.com',
       url='https://github.com/turicas/strobo/',
